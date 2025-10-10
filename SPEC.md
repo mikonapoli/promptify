@@ -4,6 +4,8 @@
 - **Purpose**: Provide a web experience that converts free-form user ramblings into structured, actionable prompts suitable for large language models.
 - **Access Model**: Anonymous, single-user workflow. No authentication, accounts, or persistence.
 - **Routing**: Application rooted at `/promptify`; all root traffic `/` redirects to this base path.
+ - **Tech Stack**: Python with Air (FastAPI-based) for HTML pages and API endpoints.
+ - **Interactivity**: HTMX for dynamic interactions; AlpineJS only if truly necessary.
 
 ## 2. Core Workflows
 - **Draft Input**: User types or dictates text into the primary textarea labelled `Your Ramblings`. Changes are instantly reflected; original formatting is preserved.
@@ -69,7 +71,8 @@
 
 ## 4. Voice Dictation
 - Uses the browser Speech Recognition API in continuous mode.
-- If unavailable, microphone interactions have no effect but do not surface errors.
+- Browser support: Chrome (primary). Safari where supported.
+- If unsupported, the microphone button is disabled and displays an explanatory tooltip; no errors are surfaced.
 - Only finalised transcripts append to the input textarea, with a trailing space.
 - Recognition errors automatically stop dictation and reset the listening flag.
 - Microphone permission must be declared so the host platform prompts the user appropriately.
