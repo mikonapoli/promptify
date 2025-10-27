@@ -1,9 +1,23 @@
 import air
 from air import Air
 from fastapi.staticfiles import StaticFiles
+from fastapi import HTTPException
+from pydantic import BaseModel
 
 app = Air()
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
+
+class PromptifyRequest(BaseModel):
+    text: str
+    prompt: str
+
+
+@app.post("/api/promptify")
+async def promptify(request: PromptifyRequest):
+    if not request.text or not request.text.strip():
+        raise HTTPException(status_code=400, detail={"error": "Input text cannot be empty."})
+    return {"success": True, "message": "Promptify endpoint working"}
 
 
 @app.get("/")
