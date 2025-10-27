@@ -27,6 +27,10 @@ def home():
                     style="display: flex; align-items: center;",
                 ),
             ),
+            air.P(
+                "Turn your ramblings into perfectly structured prompts.",
+                style="text-align: center; margin: 2rem 0;",
+            ),
             air.Main(
                 air.H1("Hello World"),
             ),

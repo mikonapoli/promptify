@@ -54,3 +54,10 @@ def test_header_contains_title():
     html = response.text.lower()
     assert "<header" in html
     assert "promptify" in html
+
+
+def test_hero_message_exists():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "turn your ramblings into perfectly structured prompts" in response.text.lower()
