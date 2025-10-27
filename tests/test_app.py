@@ -30,3 +30,27 @@ def test_page_has_html_structure():
     assert "<html" in response.text.lower()
     assert "<head" in response.text.lower()
     assert "<body" in response.text.lower()
+
+
+def test_header_exists():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "<header" in response.text.lower()
+
+
+def test_header_contains_logo():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "promptify_logo.png" in response.text.lower()
+    assert "<img" in response.text.lower()
+
+
+def test_header_contains_title():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    html = response.text.lower()
+    assert "<header" in html
+    assert "promptify" in html
