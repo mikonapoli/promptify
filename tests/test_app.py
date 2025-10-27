@@ -96,3 +96,24 @@ def test_input_textarea_has_placeholder():
     client = TestClient(app)
     response = client.get("/")
     assert "paste or dictate your ramblings here" in response.text.lower()
+
+
+def test_output_panel_has_title():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "structured prompt" in response.text.lower()
+
+
+def test_output_panel_has_textarea():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert response.text.count('<textarea') >= 2
+
+
+def test_output_textarea_has_placeholder():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "your structured prompt will appear here" in response.text.lower()
