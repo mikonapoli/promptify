@@ -125,3 +125,11 @@ def test_promptify_button_exists():
     response = client.get("/")
     assert "<button" in response.text.lower()
     assert "promptify" in response.text.lower()
+
+
+def test_copy_button_exists():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert response.text.count("<button") >= 2
+    assert "copy" in response.text.lower()
