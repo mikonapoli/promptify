@@ -62,6 +62,15 @@ def home():
                 **{"class": "panels-grid"},
                 style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin: 2rem 0; min-height: 50vh;",
             ),
+            air.Div(
+                air.Button(
+                    "✨ Promptify",
+                    id="promptify-btn",
+                    **{"class": "primary"},
+                    style="padding: 0.75rem 2rem; font-size: 1.1rem; font-weight: 600; cursor: pointer;",
+                ),
+                style="display: flex; justify-content: center; margin: 2rem 0;",
+            ),
             air.Main(
                 air.H1("Hello World"),
             ),

@@ -117,3 +117,11 @@ def test_output_textarea_has_placeholder():
     client = TestClient(app)
     response = client.get("/")
     assert "your structured prompt will appear here" in response.text.lower()
+
+
+def test_promptify_button_exists():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "<button" in response.text.lower()
+    assert "promptify" in response.text.lower()
