@@ -1,0 +1,5 @@
+air
+fastapi[standard]
+pytest
+pytest-asyncio
+httpx
