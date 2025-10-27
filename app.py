@@ -31,6 +31,20 @@ def home():
                 "Turn your ramblings into perfectly structured prompts.",
                 style="text-align: center; margin: 2rem 0;",
             ),
+            air.Div(
+                air.Div(
+                    "Panel 1",
+                    **{"class": "panel-card"},
+                    style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
+                ),
+                air.Div(
+                    "Panel 2",
+                    **{"class": "panel-card"},
+                    style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
+                ),
+                **{"class": "panels-grid"},
+                style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin: 2rem 0; min-height: 50vh;",
+            ),
             air.Main(
                 air.H1("Hello World"),
             ),

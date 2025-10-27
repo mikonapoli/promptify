@@ -61,3 +61,17 @@ def test_hero_message_exists():
     client = TestClient(app)
     response = client.get("/")
     assert "turn your ramblings into perfectly structured prompts" in response.text.lower()
+
+
+def test_panels_grid_exists():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert 'class="panels-grid"' in response.text or 'grid' in response.text.lower()
+
+
+def test_two_panel_cards_exist():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert response.text.count('class="panel-card"') >= 2
