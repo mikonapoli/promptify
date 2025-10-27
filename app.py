@@ -33,9 +33,17 @@ def home():
             ),
             air.Div(
                 air.Div(
-                    "Panel 1",
+                    air.Div(
+                        air.H3("Your Ramblings", style="margin: 0 0 1rem 0;"),
+                        style="display: flex; justify-content: space-between; align-items: center;",
+                    ),
+                    air.Textarea(
+                        id="input-text",
+                        placeholder="Paste or dictate your ramblings here...",
+                        style="width: 100%; min-height: 300px; resize: none; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem;",
+                    ),
                     **{"class": "panel-card"},
-                    style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
+                    style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column;",
                 ),
                 air.Div(
                     "Panel 2",

@@ -75,3 +75,24 @@ def test_two_panel_cards_exist():
     client = TestClient(app)
     response = client.get("/")
     assert response.text.count('class="panel-card"') >= 2
+
+
+def test_input_panel_has_title():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "your ramblings" in response.text.lower()
+
+
+def test_input_panel_has_textarea():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert '<textarea' in response.text.lower()
+
+
+def test_input_textarea_has_placeholder():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/")
+    assert "paste or dictate your ramblings here" in response.text.lower()
