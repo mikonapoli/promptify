@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from fastapi.responses import StreamingResponse, RedirectResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 
 load_dotenv()
 
@@ -27,16 +27,19 @@ async def generate_stream(text: str, prompt_template: str):
             yield f"data: {json.dumps({'error': 'GEMINI_API_KEY not configured'})}\n\n"
             return
 
-        genai.configure(api_key=api_key)
+        client = genai.Client(api_key=api_key)
         model_name = os.getenv("GEMINI_MODEL_NAME", "gemini-2.0-flash-exp")
-        model = genai.GenerativeModel(model_name)
 
         filled_prompt = prompt_template.replace("{text}", text)
-        response = await model.generate_content_async(filled_prompt, stream=True)
 
-        async for chunk in response:
-            if chunk.text:
-                yield f"data: {json.dumps({'chunk': chunk.text})}\n\n"
+        async with client.aio as aclient:
+            stream = await aclient.models.generate_content_stream(
+                model=model_name,
+                contents=filled_prompt
+            )
+            async for chunk in stream:
+                if chunk.text:
+                    yield f"data: {json.dumps({'chunk': chunk.text})}\n\n"
 
         yield f"data: {json.dumps({'done': True})}\n\n"
 
