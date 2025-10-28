@@ -4,7 +4,7 @@ import json
 from air import Air
 from fastapi.staticfiles import StaticFiles
 from fastapi import HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, RedirectResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -55,8 +55,7 @@ async def promptify(request: PromptifyRequest):
     )
 
 
-@app.get("/")
-def home():
+def render_app():
     return air.Html(
         air.Head(
             air.Meta(charset="UTF-8"),
@@ -233,3 +232,13 @@ document.getElementById('promptify-btn').addEventListener('click', async functio
             """),
         ),
     )
+
+
+@app.get("/")
+def root():
+    return RedirectResponse(url="/promptify", status_code=307)
+
+
+@app.get("/promptify")
+def promptify_home():
+    return render_app()

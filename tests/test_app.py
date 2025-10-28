@@ -133,3 +133,19 @@ def test_copy_button_exists():
     response = client.get("/")
     assert response.text.count("<button") >= 2
     assert "copy" in response.text.lower()
+
+
+def test_root_redirects_to_promptify():
+    from app import app
+    client = TestClient(app, follow_redirects=False)
+    response = client.get("/")
+    assert response.status_code == 307
+    assert response.headers["location"] == "/promptify"
+
+
+def test_promptify_path_serves_app():
+    from app import app
+    client = TestClient(app)
+    response = client.get("/promptify")
+    assert response.status_code == 200
+    assert "promptify" in response.text.lower()
