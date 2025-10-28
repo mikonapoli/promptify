@@ -153,9 +153,6 @@ def render_app():
                 **{"role": "alert", "aria-live": "assertive"},
                 style="display: none; background: #fee; color: #c00; padding: 1rem; margin: 1rem 0; border-radius: 8px; text-align: center;",
             ),
-            air.Main(
-                air.H1("Hello World"),
-            ),
             air.Script("""
 let recognition = null;
 let isListening = false;
