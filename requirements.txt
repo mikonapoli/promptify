@@ -1,0 +1,8 @@
+air
+fastapi[standard]
+pytest
+pytest-asyncio
+httpx
+google-genai
+python-dotenv
+cffi
