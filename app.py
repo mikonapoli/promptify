@@ -65,6 +65,18 @@ def render_app():
             air.Link(rel="preconnect", href="https://fonts.googleapis.com"),
             air.Link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin="anonymous"),
             air.Link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"),
+            air.Style("""
+                * { font-family: 'Inter', sans-serif; }
+                body {
+                    min-height: 100vh;
+                    background: linear-gradient(to bottom, #f8fafc, #f1e5ff);
+                    margin: 0;
+                    padding: 1rem;
+                }
+                @media (min-width: 768px) {
+                    .panels-grid { grid-template-columns: 1fr 1fr !important; }
+                }
+            """),
         ),
         air.Body(
             air.Header(
