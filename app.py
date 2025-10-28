@@ -98,7 +98,7 @@ def render_app():
                         air.Button(
                             "🎤 Dictate",
                             id="mic-btn",
-                            **{"class": "outline"},
+                            **{"class": "outline", "aria-label": "Start voice dictation"},
                             style="padding: 0.5rem 1rem;",
                         ),
                         style="display: flex; justify-content: space-between; align-items: center;",
@@ -106,6 +106,7 @@ def render_app():
                     air.Textarea(
                         id="input-text",
                         placeholder="Paste or dictate your ramblings here...",
+                        **{"aria-label": "Your ramblings input"},
                         style="width: 100%; min-height: 300px; resize: none; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem;",
                     ),
                     **{"class": "panel-card"},
@@ -117,7 +118,7 @@ def render_app():
                         air.Button(
                             "📋 Copy",
                             id="copy-btn",
-                            **{"class": "outline"},
+                            **{"class": "outline", "aria-label": "Copy structured prompt to clipboard"},
                             style="padding: 0.5rem 1rem;",
                         ),
                         style="display: flex; justify-content: space-between; align-items: center;",
@@ -126,6 +127,7 @@ def render_app():
                         id="output-text",
                         placeholder="Your structured prompt will appear here...",
                         readonly=True,
+                        **{"aria-label": "Structured prompt output", "aria-live": "polite"},
                         style="width: 100%; min-height: 300px; resize: none; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem;",
                     ),
                     **{"class": "panel-card"},
@@ -138,13 +140,14 @@ def render_app():
                 air.Button(
                     "✨ Promptify",
                     id="promptify-btn",
-                    **{"class": "primary"},
+                    **{"class": "primary", "aria-label": "Generate structured prompt from your ramblings"},
                     style="padding: 0.75rem 2rem; font-size: 1.1rem; font-weight: 600; cursor: pointer;",
                 ),
                 style="display: flex; justify-content: center; margin: 2rem 0;",
             ),
             air.Div(
                 id="error-banner",
+                **{"role": "alert", "aria-live": "assertive"},
                 style="display: none; background: #fee; color: #c00; padding: 1rem; margin: 1rem 0; border-radius: 8px; text-align: center;",
             ),
             air.Main(
@@ -190,6 +193,7 @@ function startDictation() {
     isListening = true;
     const btn = document.getElementById('mic-btn');
     btn.innerHTML = '🔴 Stop';
+    btn.setAttribute('aria-label', 'Stop voice dictation');
     btn.style.background = '#dc2626';
     btn.style.color = 'white';
 }
@@ -200,6 +204,7 @@ function stopDictation() {
     isListening = false;
     const btn = document.getElementById('mic-btn');
     btn.innerHTML = '🎤 Dictate';
+    btn.setAttribute('aria-label', 'Start voice dictation');
     btn.style.background = '';
     btn.style.color = '';
 }
