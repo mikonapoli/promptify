@@ -32,9 +32,9 @@ async def generate_stream(text: str, prompt_template: str):
         model = genai.GenerativeModel(model_name)
 
         filled_prompt = prompt_template.replace("{text}", text)
-        response = model.generate_content(filled_prompt, stream=True)
+        response = await model.generate_content_async(filled_prompt, stream=True)
 
-        for chunk in response:
+        async for chunk in response:
             if chunk.text:
                 yield f"data: {json.dumps({'chunk': chunk.text})}\n\n"
 
