@@ -1,8 +1,15 @@
 import air
+import os
+import json
 from air import Air
 from fastapi.staticfiles import StaticFiles
 from fastapi import HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+load_dotenv()
 
 app = Air()
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
@@ -13,11 +20,39 @@ class PromptifyRequest(BaseModel):
     prompt: str
 
 
+async def generate_stream(text: str, prompt_template: str):
+    try:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            yield f"data: {json.dumps({'error': 'GEMINI_API_KEY not configured'})}\n\n"
+            return
+
+        genai.configure(api_key=api_key)
+        model_name = os.getenv("GEMINI_MODEL_NAME", "gemini-2.0-flash-exp")
+        model = genai.GenerativeModel(model_name)
+
+        filled_prompt = prompt_template.replace("{text}", text)
+        response = model.generate_content(filled_prompt, stream=True)
+
+        for chunk in response:
+            if chunk.text:
+                yield f"data: {json.dumps({'chunk': chunk.text})}\n\n"
+
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    except Exception as e:
+        yield f"data: {json.dumps({'error': f'Gemini API failed: {str(e)}'})}\n\n"
+
+
 @app.post("/api/promptify")
 async def promptify(request: PromptifyRequest):
     if not request.text or not request.text.strip():
         raise HTTPException(status_code=400, detail={"error": "Input text cannot be empty."})
-    return {"success": True, "message": "Promptify endpoint working"}
+
+    return StreamingResponse(
+        generate_stream(request.text, request.prompt),
+        media_type="text/event-stream"
+    )
 
 
 @app.get("/")

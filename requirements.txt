@@ -3,3 +3,6 @@ fastapi[standard]
 pytest
 pytest-asyncio
 httpx
+google-generativeai
+python-dotenv
+cffi

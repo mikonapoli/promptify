@@ -35,3 +35,10 @@ def test_api_accepts_valid_text():
     client = TestClient(app)
     response = client.post("/api/promptify", json={"text": "test input", "prompt": "template"})
     assert response.status_code == 200
+
+
+def test_api_replaces_text_in_prompt():
+    from app import app
+    client = TestClient(app)
+    response = client.post("/api/promptify", json={"text": "my text", "prompt": "Process this: {text}"})
+    assert response.status_code == 200
