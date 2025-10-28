@@ -151,6 +151,68 @@ def render_app():
                 air.H1("Hello World"),
             ),
             air.Script("""
+let recognition = null;
+let isListening = false;
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    recognition.onresult = function(event) {
+        const inputText = document.getElementById('input-text');
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                inputText.value += event.results[i][0].transcript + ' ';
+            }
+        }
+    };
+
+    recognition.onerror = function() {
+        stopDictation();
+    };
+
+    recognition.onend = function() {
+        if (isListening) {
+            isListening = false;
+            const btn = document.getElementById('mic-btn');
+            btn.innerHTML = '🎤 Dictate';
+            btn.style.background = '';
+            btn.style.color = '';
+        }
+    };
+}
+
+function startDictation() {
+    if (!recognition) return;
+    recognition.start();
+    isListening = true;
+    const btn = document.getElementById('mic-btn');
+    btn.innerHTML = '🔴 Stop';
+    btn.style.background = '#dc2626';
+    btn.style.color = 'white';
+}
+
+function stopDictation() {
+    if (!recognition) return;
+    recognition.stop();
+    isListening = false;
+    const btn = document.getElementById('mic-btn');
+    btn.innerHTML = '🎤 Dictate';
+    btn.style.background = '';
+    btn.style.color = '';
+}
+
+document.getElementById('mic-btn').addEventListener('click', function() {
+    if (!recognition) {
+        alert('Speech recognition not supported in this browser');
+        return;
+    }
+    if (isListening) stopDictation();
+    else startDictation();
+});
+
 const PROMPT_TEMPLATE = `<input>
 {text}
 </input>
