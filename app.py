@@ -166,6 +166,8 @@ document.getElementById('copy-btn').addEventListener('click', function() {
 document.getElementById('promptify-btn').addEventListener('click', async function() {
     const inputText = document.getElementById('input-text').value;
     const outputText = document.getElementById('output-text');
+    const btn = this;
+    const originalText = btn.innerHTML;
 
     if (!inputText.trim()) {
         alert('Input text cannot be empty.');
@@ -173,31 +175,38 @@ document.getElementById('promptify-btn').addEventListener('click', async functio
     }
 
     outputText.value = '';
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Prompt engineer is working...';
 
-    const response = await fetch('/api/promptify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: inputText, prompt: PROMPT_TEMPLATE })
-    });
+    try {
+        const response = await fetch('/api/promptify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: inputText, prompt: PROMPT_TEMPLATE })
+        });
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
 
-    while (true) {
-        const {value, done} = await reader.read();
-        if (done) break;
+        while (true) {
+            const {value, done} = await reader.read();
+            if (done) break;
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\\n');
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\\n');
 
-        for (const line of lines) {
-            if (line.startsWith('data: ')) {
-                const data = JSON.parse(line.slice(6));
-                if (data.chunk) outputText.value += data.chunk;
-                if (data.error) alert('Error: ' + data.error);
-                if (data.done) break;
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const data = JSON.parse(line.slice(6));
+                    if (data.chunk) outputText.value += data.chunk;
+                    if (data.error) alert('Error: ' + data.error);
+                    if (data.done) break;
+                }
             }
         }
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
 });
             """),
