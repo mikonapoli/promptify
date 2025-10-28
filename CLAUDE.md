@@ -1,5 +1,25 @@
 # Development Guidelines
 
+## Environment and Tooling
+
+**Always use `uv` for dependency management.** Never use `pip` directly.
+
+**Always use `just` for common tasks.** The justfile provides standardized commands:
+
+```bash
+just test      # Run tests (uses: uv run pytest)
+just dev       # Run development server (uses: uv run uvicorn)
+just install   # Install dependencies (uses: uv pip install)
+just clean     # Clean build artifacts
+just setup     # One-time project setup
+```
+
+When developing:
+- Run tests frequently: `just test`
+- Start the app: `just dev`
+- Install new dependencies: Add to `pyproject.toml` then `just install`
+- Never commit without running `just test` first
+
 ## Test-Driven Development (TDD)
 
 We follow strict TDD:
