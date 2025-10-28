@@ -130,6 +130,24 @@ def home():
                 air.H1("Hello World"),
             ),
             air.Script("""
+const PROMPT_TEMPLATE = `<input>
+{text}
+</input>
+
+You are an expert prompt engineer. Your task is to rewrite the user's request in <input /> as a detailed and precise prompt for an AI model.
+
+1. Read <input /> carefully and make sure you understand the user's request in its entirety and with full context and details.
+2. Plan carefully how to rewrite the request as a detailed and precise prompt for an AI model. Consider what specific information, instructions, or context the AI model would need to fulfill the user's request effectively.
+3. Rewrite the user's request as a detailed and precise prompt for an AI model, ensuring clarity, specificity, and completeness. The prompt should guide the AI model to produce the desired output without ambiguity.
+  - Use clear and specific language. Think of this as language as specification / code, not natural language.
+  - Use headings (##, ###, ####) where appropriate. No need for a first-level title or heading, only for sections (and only where it's called for).
+  - Use **bold**, _italics_, bullet points ( - , not * ), and numbered lists ( 1. , 2. ) liberally to organize the prompt effectively. Never use emojis.
+  - Always start with a single short paragraph summarising and describing the overall task.
+  - The resulting prompt should be concise and specific, avoiding unnecessary complexity or verbosity. It should be at most 1.5X the length of the original request in <input />, and at least 0.75X of the length of the original request in <input />.
+  - Use plain, straightforward, precise language without embellishments, niceties, or creative flourishes.
+  - Do not add or invent any information that is not present in <input />.
+  - Output the final prompt only, as markdown, without any additional commentary or explanation.`;
+
 document.getElementById('copy-btn').addEventListener('click', function() {
     const outputText = document.getElementById('output-text');
     const btn = this;
@@ -143,6 +161,44 @@ document.getElementById('copy-btn').addEventListener('click', function() {
             btn.disabled = false;
         }, 2000);
     });
+});
+
+document.getElementById('promptify-btn').addEventListener('click', async function() {
+    const inputText = document.getElementById('input-text').value;
+    const outputText = document.getElementById('output-text');
+
+    if (!inputText.trim()) {
+        alert('Input text cannot be empty.');
+        return;
+    }
+
+    outputText.value = '';
+
+    const response = await fetch('/api/promptify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: inputText, prompt: PROMPT_TEMPLATE })
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+        const {value, done} = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\\n');
+
+        for (const line of lines) {
+            if (line.startsWith('data: ')) {
+                const data = JSON.parse(line.slice(6));
+                if (data.chunk) outputText.value += data.chunk;
+                if (data.error) alert('Error: ' + data.error);
+                if (data.done) break;
+            }
+        }
+    }
 });
             """),
         ),
