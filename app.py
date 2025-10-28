@@ -95,6 +95,12 @@ def render_app():
                 air.Div(
                     air.Div(
                         air.H3("Your Ramblings", style="margin: 0 0 1rem 0;"),
+                        air.Button(
+                            "🎤 Dictate",
+                            id="mic-btn",
+                            **{"class": "outline"},
+                            style="padding: 0.5rem 1rem;",
+                        ),
                         style="display: flex; justify-content: space-between; align-items: center;",
                     ),
                     air.Textarea(
