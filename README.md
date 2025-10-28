@@ -57,6 +57,37 @@ uvicorn app:app --reload
 
 Visit http://localhost:8000 (redirects to `/promptify`)
 
+### Docker Setup (Alternative)
+
+If you prefer Docker, you can run Promptify in a container:
+
+```bash
+# Build and run with docker-compose (recommended)
+docker-compose up
+
+# Or build and run manually
+docker build -t promptify .
+docker run -p 8000:8000 --env-file .env promptify
+```
+
+**Prerequisites for Docker:**
+- Docker and Docker Compose installed
+- `.env` file with your `GEMINI_API_KEY`
+
+**Development with Docker:**
+```bash
+# Start with hot-reload enabled
+docker-compose up
+
+# Rebuild after dependency changes
+docker-compose up --build
+
+# Stop containers
+docker-compose down
+```
+
+The docker-compose setup includes volume mounts for live code reloading during development.
+
 ## Development
 
 ```bash

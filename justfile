@@ -67,3 +67,28 @@ setup:
 # Check if dependencies are installed
 check:
     uv pip list
+
+# Docker commands
+# Build Docker image
+docker-build:
+    docker build -t promptify .
+
+# Run with Docker Compose
+docker-up:
+    docker-compose up
+
+# Run with Docker Compose (detached)
+docker-up-d:
+    docker-compose up -d
+
+# Stop Docker Compose
+docker-down:
+    docker-compose down
+
+# Rebuild and run with Docker Compose
+docker-rebuild:
+    docker-compose up --build
+
+# View Docker logs
+docker-logs:
+    docker-compose logs -f
