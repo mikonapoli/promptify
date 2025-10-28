@@ -126,6 +126,10 @@ def home():
                 ),
                 style="display: flex; justify-content: center; margin: 2rem 0;",
             ),
+            air.Div(
+                id="error-banner",
+                style="display: none; background: #fee; color: #c00; padding: 1rem; margin: 1rem 0; border-radius: 8px; text-align: center;",
+            ),
             air.Main(
                 air.H1("Hello World"),
             ),
@@ -163,6 +167,17 @@ document.getElementById('copy-btn').addEventListener('click', function() {
     });
 });
 
+function showError(message) {
+    const banner = document.getElementById('error-banner');
+    banner.textContent = message;
+    banner.style.display = 'block';
+}
+
+function hideError() {
+    const banner = document.getElementById('error-banner');
+    banner.style.display = 'none';
+}
+
 document.getElementById('promptify-btn').addEventListener('click', async function() {
     const inputText = document.getElementById('input-text').value;
     const outputText = document.getElementById('output-text');
@@ -170,10 +185,11 @@ document.getElementById('promptify-btn').addEventListener('click', async functio
     const originalText = btn.innerHTML;
 
     if (!inputText.trim()) {
-        alert('Input text cannot be empty.');
+        showError('Input text cannot be empty.');
         return;
     }
 
+    hideError();
     outputText.value = '';
     btn.disabled = true;
     btn.innerHTML = '⏳ Prompt engineer is working...';
@@ -199,11 +215,16 @@ document.getElementById('promptify-btn').addEventListener('click', async functio
                 if (line.startsWith('data: ')) {
                     const data = JSON.parse(line.slice(6));
                     if (data.chunk) outputText.value += data.chunk;
-                    if (data.error) alert('Error: ' + data.error);
+                    if (data.error) {
+                        showError(data.error);
+                        return;
+                    }
                     if (data.done) break;
                 }
             }
         }
+    } catch (e) {
+        showError('Failed to connect to server: ' + e.message);
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
