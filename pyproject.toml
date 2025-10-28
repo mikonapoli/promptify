@@ -1,0 +1,27 @@
+[project]
+name = "promptify"
+version = "0.1.0"
+description = "Turn your ramblings into perfectly structured prompts"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "air",
+    "fastapi[standard]",
+    "google-generativeai",
+    "python-dotenv",
+    "cffi",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -56,3 +56,16 @@ pids/
 Thumbs.db
 .Spotlight-V100
 .Trashes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
